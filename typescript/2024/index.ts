@@ -3,6 +3,7 @@ import { day2 } from './day-2.ts';
 import { day3 } from './day-3.ts';
 import { day4 } from './day-4.ts';
 import { day5 } from './day-5.ts';
+import { day6 } from './day-6.ts';
 
 export const year2024 = {
   '1': day1,
@@ -10,4 +11,5 @@ export const year2024 = {
   '3': day3,
   '4': day4,
   '5': day5,
+  '6': day6,
 }
