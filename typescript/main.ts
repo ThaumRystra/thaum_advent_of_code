@@ -25,4 +25,6 @@ if (!years[year][day][part]) {
   throw new Error(`No part ${part} found in day ${day} of year ${year}`);
 }
 
+console.time('Total runtime');
 console.log(years[year][day][part]());
+console.timeEnd('Total runtime');

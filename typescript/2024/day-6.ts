@@ -147,16 +147,16 @@ function locationInFront(currentLocation: [number, number], currentDirection: Di
   return [currentLocation[0] + currentDirection[0], currentLocation[1] + currentDirection[1]];
 }
 
-function printMap(grid: Grid, currentLocation: [number, number]): void {
-  console.log(grid.map(
-    (row, rowIndex) => row.map(
-      (cell, colIndex) => currentLocation[0] === rowIndex && currentLocation[1] === colIndex
-        ? '@'
-        : cell.visited
-          ? 'X'
-          : cell.obstacle
-            ? '#'
-            : '.'
-    ).join('')
-  ).join('\n') + '\n\n\n');
-}
+// function printMap(grid: Grid, currentLocation: [number, number]): void {
+//   console.log(grid.map(
+//     (row, rowIndex) => row.map(
+//       (cell, colIndex) => currentLocation[0] === rowIndex && currentLocation[1] === colIndex
+//         ? '@'
+//         : cell.visited
+//           ? 'X'
+//           : cell.obstacle
+//             ? '#'
+//             : '.'
+//     ).join('')
+//   ).join('\n') + '\n\n\n');
+// }
