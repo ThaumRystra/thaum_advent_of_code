@@ -4,10 +4,10 @@ import { Day } from "../structure-types.ts";
 import _ from "npm:lodash";
 
 /**
- * Modelling the problem as a system of 2 equations where A is how many times A need to be pushed
- * and B is how many times B need to be pushed to get the prize. ax, ay, bx, by are the distances 
- * button A and B move in the x and y directions respectively.
- * px, py are the prize's x and y coordinates.
+ * Modelling the problem as a system of 2 equations where 
+ * - A and B are how many times A and B need to be pushed to get the prize
+ * - ax, ay, bx, by are the distances button A and B move the claw in the x and y directions
+ * - px, py are the prize's x and y coordinates.
  * 
  * Left hand side (lhs)
  * A(ax) + B(bx) = px
