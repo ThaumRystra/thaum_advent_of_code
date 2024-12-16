@@ -13,6 +13,7 @@ import { day12 } from './day-12.ts';
 import { day13 } from './day-13.ts';
 import { day14 } from './day-14.ts';
 import { day15 } from './day-15.ts';
+import { day16 } from './day-16.ts';
 
 export const year2024 = {
   '1': day1,
@@ -30,4 +31,5 @@ export const year2024 = {
   '13': day13,
   '14': day14,
   '15': day15,
+  '16': day16,
 }
