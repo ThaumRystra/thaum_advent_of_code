@@ -1,4 +1,4 @@
-export type Part = () => number;
+export type Part = () => number | string;
 
 export type Day = {
   '1': Part;
