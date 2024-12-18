@@ -14,7 +14,6 @@ function part1(): number {
   let currentLocation = startLocation;
   let visitedCount = 1; // starting location is visited
   while (true) {
-    // printMap(grid, currentLocation);
     let nextLocation = locationInFront(currentLocation, direction);
     // while obstacle in front, turn right
     while (grid[nextLocation[0]]?.[nextLocation[1]]?.obstacle) {
@@ -23,6 +22,7 @@ function part1(): number {
     }
     // If we are stepping out of the grid, we are done
     if (nextLocation[0] < 0 || nextLocation[0] >= grid.length || nextLocation[1] < 0 || nextLocation[1] >= grid[0].length) {
+      _printMap(grid, currentLocation);
       return visitedCount;
     }
     // otherwise, move forward
@@ -37,19 +37,43 @@ function part1(): number {
 
 function part2(): number {
   const [grid, startLocation] = parseGrid();
+  // Get the original path the guard walked without obstacles
+  const originalGrid = _.cloneDeep(grid);
+  walk(originalGrid, startLocation, [-1, 0]);
+  // Count how many obstacles cause a loop
   let numLoopObstacles = 0;
   for (let row = 0; row < grid.length; row++) {
     console.log('testing row ' + row + ' of ' + grid.length);
     for (let col = 0; col < grid[0].length; col++) {
-      const newGrid = _.cloneDeep(grid);
-      newGrid[row][col].obstacle = true;
-      const visitedCount = walk(newGrid, startLocation, [-1, 0]);
+      // If the guard never walked here anyway, don't bother adding an obstacle
+      if (!originalGrid[row][col].visited) {
+        continue;
+      }
+      // Add an obstacle and detect loops
+      grid[row][col].obstacle = true;
+      const visitedCount = walk(grid, startLocation, [-1, 0]);
       if (visitedCount === 'loop') {
         numLoopObstacles++;
       }
+      // reset the grid. We could clone the grid each time, but it's much cheaper to reset it
+      resetGrid(grid, [row, col]);
     }
   }
   return numLoopObstacles;
+}
+
+function resetGrid(grid: Grid, tempObstacle: [number, number]) {
+  for (let row = 0; row < grid.length; row++) {
+    for (let col = 0; col < grid[0].length; col++) {
+      const cell = grid[row][col];
+      cell.visited = false;
+      cell.visitedFacingN = false;
+      cell.visitedFacingS = false;
+      cell.visitedFacingE = false;
+      cell.visitedFacingW = false;
+    }
+  }
+  grid[tempObstacle[0]][tempObstacle[1]].obstacle = false;
 }
 
 function walk(grid: Grid, startLocation: [number, number], direction: Direction): number | 'loop' {
@@ -147,16 +171,16 @@ function locationInFront(currentLocation: [number, number], currentDirection: Di
   return [currentLocation[0] + currentDirection[0], currentLocation[1] + currentDirection[1]];
 }
 
-// function printMap(grid: Grid, currentLocation: [number, number]): void {
-//   console.log(grid.map(
-//     (row, rowIndex) => row.map(
-//       (cell, colIndex) => currentLocation[0] === rowIndex && currentLocation[1] === colIndex
-//         ? '@'
-//         : cell.visited
-//           ? 'X'
-//           : cell.obstacle
-//             ? '#'
-//             : '.'
-//     ).join('')
-//   ).join('\n') + '\n\n\n');
-// }
+function _printMap(grid: Grid, currentLocation: [number, number]): void {
+  console.log(grid.map(
+    (row, rowIndex) => row.map(
+      (cell, colIndex) => currentLocation[0] === rowIndex && currentLocation[1] === colIndex
+        ? '@'
+        : cell.visited
+          ? 'O'
+          : cell.obstacle
+            ? '█'
+            : ' '
+    ).join('')
+  ).join('\n') + '\n\n\n');
+}
