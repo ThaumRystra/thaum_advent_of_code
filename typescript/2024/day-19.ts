@@ -29,17 +29,14 @@ function part1(): number {
 
   let totalValidDesigns = 0;
   for (const design of designs) {
-    console.log(`\n\nDesign ${design}`);
     const candidates: string[] = [''];
-    const visitedCandidates: Set<string> = new Set();
     let isValid = false;
+    const visitedCandidates = new Set<string>();
     testCandidates: while (candidates.length) {
       const candidate = candidates.pop()!;
+      visitedCandidates.add(candidate);
       const subString = design.slice(candidate.length, candidate.length + maxTowelLength);
       const nextTowels = getValidTowels(subString);
-      // console.log(`Candid ${candidate}`);
-      // console.log(`Substring ${subString}`);
-      // console.log(`Next towels ${nextTowels}`);
       for (const towel of nextTowels) {
         const newCandidate = candidate + towel;
         if (newCandidate.length > design.length) {
@@ -47,8 +44,10 @@ function part1(): number {
         }
         if (newCandidate === design) {
           isValid = true;
-          console.log(`Design ${design} is valid`);
           break testCandidates;
+        }
+        if (visitedCandidates.has(newCandidate)) {
+          continue;
         }
         candidates.push(candidate + towel);
       }
@@ -57,8 +56,6 @@ function part1(): number {
   }
   return totalValidDesigns;
 }
-
-function countValidCombinations(design: string, towels)
 
 function part2(): number {
   const [towelsInput, designs] = parseInput();
@@ -78,37 +75,22 @@ function part2(): number {
     }
     return validTowels;
   });
-  let validCandidateCount = 0;
-  for (const design of designs) {
-    console.log(`\n\nDesign ${design}`);
-    const candidates: string[] = [''];
-    // const validCandidates: Set<string> = new Set();
-    while (candidates.length) {
-      const candidateWithDashes = candidates.pop()!;
-      const candidate = candidateWithDashes.replace(/-/g, '');
-      if (candidate === design) {
-        // console.log(candidateWithDashes);
-        // if (validCandidates.has(candidateWithDashes)) {
-        //   throw new Error('Duplicate candidate');
-        // }
-        // validCandidates.add(candidateWithDashes);
-        validCandidateCount++;
-        console.log(validCandidateCount);
-        continue;
-      }
-      const subString = design.slice(candidate.length, candidate.length + maxTowelLength);
-      const nextTowels = getValidTowels(subString);
-      for (const towel of nextTowels) {
-        const newCandidateWithDashes = candidateWithDashes + '-' + towel;
-        const newCandidate = candidate + towel;
-        if (newCandidate.length > design.length) {
-          continue;
-        }
-        candidates.push(newCandidateWithDashes);
-      }
+  const countValidCombinations = _.memoize((design: string): number => {
+    // There is only one way to make the empty string
+    if (design === '') {
+      return 1;
     }
-  }
-  return validCandidateCount;
+    const subString = design.slice(0, maxTowelLength);
+    const nextTowels = getValidTowels(subString);
+    return nextTowels.reduce((count, towel) => {
+      // remove the towel from the front of the design
+      const newDesign = design.slice(towel.length);
+      // And count the number of combinations the resulting string can be made of
+      return count + countValidCombinations(newDesign);
+    }, 0);
+  })
+
+  return designs.reduce((count, design) => count + countValidCombinations(design), 0);
 }
 
 /**
