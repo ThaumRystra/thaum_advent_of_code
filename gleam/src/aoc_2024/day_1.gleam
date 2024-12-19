@@ -19,8 +19,8 @@ pub fn pt_1(input: String) {
   })
 }
 
-pub fn pt_2(input: String) {
-  todo
+pub fn pt_2(_input: String) {
+  0
 }
 
 fn import_lists(input: String) -> #(List(Int), List(Int)) {

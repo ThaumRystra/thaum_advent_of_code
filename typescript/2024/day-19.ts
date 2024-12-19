@@ -93,31 +93,6 @@ function part2(): number {
   return designs.reduce((count, design) => count + countValidCombinations(design), 0);
 }
 
-/**
- * Naive approach, depth first search of all possible combinations
- * Too slow on actual input
- */
-function _stepDesign(
-  targetDesign: string, designSoFar: string[], towels: string[]
-): string[][] {
-  const newCandidates: string[][] = [];
-  checkTowel: for (const towel of towels) {
-    const candidateDesign = [...designSoFar, towel];
-    const candidateStr = candidateDesign.join('');
-    // check if the next few characters match this towel
-    for (let i = targetDesign.length - candidateStr.length; i < candidateStr.length; i++) {
-      if (targetDesign[i] !== candidateStr[i]) {
-        continue checkTowel;
-      }
-    }
-    if (candidateStr === targetDesign) {
-      return [candidateDesign];
-    }
-    newCandidates.push(candidateDesign);
-  }
-  return newCandidates.flatMap(candidateDesign => _stepDesign(targetDesign, candidateDesign, towels));
-}
-
 type SetsByLength = { [key: number]: Set<string> };
 
 function keyMap(towels: string[]): SetsByLength {
