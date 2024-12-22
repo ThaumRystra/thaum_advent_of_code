@@ -19,6 +19,7 @@ import { day18 } from './day-18.ts';
 import { day19 } from './day-19.ts';
 import { day20 } from './day-20.ts';
 import { day21 } from './day-21.ts';
+import { day22 } from './day-22.ts';
 
 export const year2024 = {
   '1': day1,
@@ -42,4 +43,5 @@ export const year2024 = {
   '19': day19,
   '20': day20,
   '21': day21,
+  '22': day22,
 }

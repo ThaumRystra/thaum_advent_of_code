@@ -1,4 +1,4 @@
-export type Part = () => number | string;
+export type Part = () => number | string | bigint;
 
 export type Day = {
   '1': Part;

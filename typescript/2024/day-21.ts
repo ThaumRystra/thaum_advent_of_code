@@ -41,12 +41,17 @@ function _unoptimizedPart1() {
   }, 0);
 }
 
-const costOfSubstringFn = (robotCount: number) => {
+const remoteKeyPresses = _.memoize((str: string) => {
+  return toKeyPresses(str, remoteA, remote);
+});
+
+const costFnForRobotCount = (robotCount: number) => {
   const costOfSubstring = _.memoize((substring: string, level: number): number => {
     if (level >= robotCount) {
       return substring.length;
     }
-    const paths = toKeyPresses(substring, remoteA, remote);
+    // Get all possible paths we could take at the next highest level to make this substring
+    const paths = remoteKeyPresses(substring);
     // Covert paths to their costs
     return paths.map(path => {
       return path
@@ -61,21 +66,21 @@ const costOfSubstringFn = (robotCount: number) => {
 }
 
 function part1(): number {
-  const costOfSubstring = costOfSubstringFn(2);
+  const costOfSubstring = costFnForRobotCount(2);
   return input.split('\n').reduce((acc, line) => {
     const staticPaths = toKeyPresses(line, keypadA, keypad);
     const lowestCost = staticPaths.map(path => costOfSubstring(path, 0)).sort((a, b) => a - b)[0];
-    console.log(`${lowestCost} * ${inputToNumber(line)}`);
+    // console.log(`${lowestCost} * ${inputToNumber(line)}`);
     return acc + lowestCost * inputToNumber(line)
   }, 0);
 }
 
 function part2(): number {
-  const costOfSubstring = costOfSubstringFn(25);
+  const costOfSubstring = costFnForRobotCount(25);
   return input.split('\n').reduce((acc, line) => {
     const staticPaths = toKeyPresses(line, keypadA, keypad);
     const lowestCost = staticPaths.map(path => costOfSubstring(path, 0)).sort((a, b) => a - b)[0];
-    console.log(`${lowestCost} * ${inputToNumber(line)}`);
+    // console.log(`${lowestCost} * ${inputToNumber(line)}`);
     return acc + lowestCost * inputToNumber(line)
   }, 0);
 }
