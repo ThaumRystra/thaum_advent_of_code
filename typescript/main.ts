@@ -1,5 +1,6 @@
 import { year2023 } from './2023/index.ts';
 import { year2024 } from './2024/index.ts';
+import { year2025 } from './2025/index.ts';
 import { Year } from "./structure-types.ts";
 
 if (!import.meta.main) {
@@ -9,6 +10,7 @@ if (!import.meta.main) {
 const years: { [year: string]: Year } = {
   '2023': year2023,
   '2024': year2024,
+  '2025': year2025,
 }
 
 const [day, part = '1', year = '2024'] = Deno.args as [string, '1' | '2', string];
