@@ -4,33 +4,38 @@ import { Day } from "../structure-types.ts";
 import _ from "npm:lodash";
 
 export const day11: Day = {
-  '1': part1,
-  '2': part2,
-}
-
-export const _exampleInput = [125, 17];
+  "1": part1,
+  "2": part2,
+};
 
 function part1(): number {
-  let stones = readInput(2024, 11).split(' ').map(Number);
+  // Take our list of stones and turn it into an array of numbers
+  let stones = readInput(2024, 11).split(" ").map(Number);
+  // For each step, blink at each stone
   for (let i = 0; i < 25; i++) {
     stones = _.flatMap(stones, blinkStone);
   }
+  // Return the length of our list of stones
   return stones.length;
 }
 
 function blinkStone(number: number): number[] {
+  // if the stone has 0 on it, replace it with a stone with a 1 on it
   if (number === 0) return [1];
+  // If the stone's number is an even number of characters, split it into two stones
   const str = number.toString();
   if (str.length % 2 === 0) {
     const halfway = str.length / 2;
     return [parseInt(str.slice(0, halfway)), parseInt(str.slice(halfway))];
   }
+  // Otherwise multiply the stone's number by 2024
   return [number * 2024];
 }
 
+// Identical to part 1, but with 75 iterations
 // This naive solution runs out of memory at around 38 iterations
 function _part2Naive(): number {
-  let stones = readInput(2024, 11).split(' ').map(Number);
+  let stones = readInput(2024, 11).split(" ").map(Number);
   for (let i = 0; i < 75; i++) {
     stones = _.flatMap(stones, blinkStone);
     console.log(i);
@@ -39,45 +44,41 @@ function _part2Naive(): number {
 }
 
 function part2(): number {
-  const stones = readInput(2024, 11).split(' ').map(Number);
-  let total = 0;
-  const memo = {};
-  for (const stone of stones) {
-    total += blinkAndCount(stone, 75, memo)
-  }
-  return total;
-}
+  const stones = readInput(2024, 11).split(" ").map(Number);
 
-/* 
- * Count how many stones we have, step starts at the total number of iterations, and counts
- * down for each recursion using a memo to record the result of any stone number and step combo we
- * have already seen
- */
-function blinkAndCount(stone: number, step: number, memo: { [key: string]: number }): number {
-  const key = `${stone}-${step}`;
-  if (memo[key]) return memo[key];
-
-  // Base Case: If there are no steps left, we have 1 stone
-  if (step === 0) return 1;
-  // if the stone is zero, count as if the stone was 1 and we have 1 step fewer
-  if (stone === 0) {
-    const result = blinkAndCount(1, step - 1, memo);
-    memo[key] = result;
-    return result;
-  }
-  // if the stone is even length, count each half as if they were stones and we have 1 step fewer
-  const str = stone.toString();
-  if (str.length % 2 === 0) {
-    const halfway = str.length / 2;
-    const left = parseInt(str.slice(0, halfway));
-    const right = parseInt(str.slice(halfway));
-    const result = blinkAndCount(left, step - 1, memo) + blinkAndCount(right, step - 1, memo);
-    memo[key] = result;
-    return result;
+  function blinkAtStone(stone: number, blinksLeft: number): number {
+    if (blinksLeft === 0) {
+      return 1;
+    }
+    if (stone === 0) {
+      // at the next step, we have [1] and 1 fewer blinks left
+      return blinkAtStoneMemoized(1, blinksLeft - 1);
+    }
+    const str = stone.toString();
+    if (str.length % 2 === 0) {
+      const halfway = str.length / 2;
+      return (
+        blinkAtStoneMemoized(parseInt(str.slice(0, halfway)), blinksLeft - 1) +
+        blinkAtStoneMemoized(parseInt(str.slice(halfway)), blinksLeft - 1)
+      );
+    }
+    return blinkAtStoneMemoized(stone * 2024, blinksLeft - 1);
   }
 
-  // Otherwise multiply the stone by 2024 and count as if the stone was that number and we have 1 step fewer
-  const result = blinkAndCount(stone * 2024, step - 1, memo);
-  memo[key] = result;
-  return result;
+  const memo = new Map<string, number>();
+  const hash = (stone: number, blinksLeft: number) => `${stone}:${blinksLeft}`;
+
+  function blinkAtStoneMemoized(stone: number, blinksLeft: number): number {
+    const key = hash(stone, blinksLeft);
+    if (memo.has(key)) {
+      return memo.get(key) as number;
+    }
+    const count = blinkAtStone(stone, blinksLeft);
+    memo.set(key, count);
+    return count;
+  }
+
+  return stones
+    .map((stone) => blinkAtStoneMemoized(stone, 75))
+    .reduce((prev, acc) => prev + acc, 0);
 }
