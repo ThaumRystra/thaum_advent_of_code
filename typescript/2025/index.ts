@@ -1,8 +1,9 @@
 import { day1 } from './day-1.ts';
+import { day2 } from './day-2.ts';
 
 export const year2025 = {
   '1': day1,
-  // '2': day2,
+  '2': day2,
   // '3': day3,
   // '4': day4,
   // '5': day5,
