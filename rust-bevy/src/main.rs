@@ -1,5 +1,6 @@
 use bevy::{
     // color::palettes::basic::*,
+    ecs::relationship::RelatedSpawnerCommands,
     prelude::*,
 };
 mod year_2025;
@@ -42,6 +43,7 @@ fn main() {
 struct MenuRoot;
 
 fn setup_camera(mut commands: Commands) {
+    commands.spawn(Camera2d);
     commands
         .spawn((
             MenuRoot,
@@ -64,6 +66,42 @@ fn setup_camera(mut commands: Commands) {
                     ..default()
                 },
             ));
+
+            // Buttons per year
+            for year in [2025] {
+                parent
+                    .spawn(Node {
+                        flex_direction: FlexDirection::Column,
+                        align_items: AlignItems::Center,
+                        row_gap: Val::Px(10.),
+                        ..default()
+                    })
+                    .with_children(|year_container| {
+                        // year title
+                        year_container.spawn((
+                            Text::new(format!("{}", year)),
+                            TextFont {
+                                font_size: 32.,
+                                ..default()
+                            },
+                        ));
+
+                        // Days in a grid
+                        year_container
+                            .spawn(Node {
+                                display: Display::Grid,
+                                grid_template_columns: RepeatedGridTrack::flex(5, 1.),
+                                column_gap: Val::Px(5.0),
+                                row_gap: Val::Px(5.0),
+                                ..default()
+                            })
+                            .with_children(|grid| {
+                                for day in 1..=12 {
+                                    day_button(grid, year, day);
+                                }
+                            });
+                    });
+            }
         });
 }
 
@@ -78,4 +116,33 @@ fn unload_puzzle(mut commands: Commands, query: Query<Entity, With<PuzzleRoot>>)
     for entity in query {
         commands.entity(entity).despawn();
     }
+}
+
+fn day_button(parent: &mut RelatedSpawnerCommands<'_, ChildOf>, year: u16, day: u16) {
+    parent
+        .spawn((
+            Button,
+            Puzzle {
+                year: Year(year),
+                day: Day(day),
+            },
+            Node {
+                width: Val::Px(50.),
+                height: Val::Px(50.),
+                justify_content: JustifyContent::Center,
+                align_items: AlignItems::Center,
+                ..default()
+            },
+            BackgroundColor(Color::srgb(0.15, 0.15, 0.15)),
+            BorderRadius::all(Val::Px(5.)),
+        ))
+        .with_children(|cell| {
+            cell.spawn((
+                Text::new(format!("{}", day)),
+                TextFont {
+                    font_size: 24.,
+                    ..default()
+                },
+            ));
+        });
 }
