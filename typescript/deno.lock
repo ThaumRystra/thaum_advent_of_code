@@ -1,25 +1,17 @@
 {
   "version": "4",
   "specifiers": {
-    "jsr:@std/assert@1": "1.0.8",
-    "jsr:@std/internal@^1.0.5": "1.0.5",
     "npm:@types/lodash@^4.17.13": "4.17.13",
+    "npm:heap-js@*": "2.7.1",
+    "npm:heap-js@^2.7.1": "2.7.1",
     "npm:lodash@*": "4.17.21"
-  },
-  "jsr": {
-    "@std/assert@1.0.8": {
-      "integrity": "ebe0bd7eb488ee39686f77003992f389a06c3da1bbd8022184804852b2fa641b",
-      "dependencies": [
-        "jsr:@std/internal"
-      ]
-    },
-    "@std/internal@1.0.5": {
-      "integrity": "54a546004f769c1ac9e025abd15a76b6671ddc9687e2313b67376125650dc7ba"
-    }
   },
   "npm": {
     "@types/lodash@4.17.13": {
       "integrity": "sha512-lfx+dftrEZcdBPczf9d0Qv0x+j/rfNCMuC6OcfXmO8gkfeNAY88PgKUbvG56whcN23gc27yenwF6oJZXGFpYxg=="
+    },
+    "heap-js@2.7.1": {
+      "integrity": "sha512-EQfezRg0NCZGNlhlDR3Evrw1FVL2G3LhU7EgPoxufQKruNBSYA8MiRPHeWbU+36o+Fhel0wMwM+sLEiBAlNLJA=="
     },
     "lodash@4.17.21": {
       "integrity": "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
@@ -27,8 +19,8 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@std/assert@1",
-      "npm:@types/lodash@^4.17.13"
+      "npm:@types/lodash@^4.17.13",
+      "npm:heap-js@^2.7.1"
     ]
   }
 }

@@ -1,8 +1,8 @@
-import { assert } from "@std/assert/assert";
 import readInput from "../read-input.ts";
 import { Day } from "../structure-types.ts";
 // @deno-types="npm:@types/lodash"
 import _ from "npm:lodash";
+import { Heap } from "npm:heap-js";
 
 export const day8: Day = {
   "1": part1,
@@ -14,25 +14,24 @@ function part1(): number {
   const junctions = parseInput(input);
   const pairs = getPairs(junctions);
   // Keep a set of circuits, which are themselves sets of junctions
-  const circuits = new Set<Circuit>(junctions.map((j) => new Set([j])));
-  function circuitWith(j: Junction) {
-    for (const c of circuits) {
-      if (c.has(j)) return c;
-    }
-    throw new Error("Did not find circuit with junction", { cause: j });
-  }
+  const circuits = new Set<Circuit>(junctions.map((j) => j.circuit));
   for (let i = 0; i < 1000; i++) {
-    const { a, b } = pairs[i];
-    assert(a !== b);
+    const { a, b } = pairs.pop()!;
     // Get the circuits these junctions belong to
-    const aCircuit = circuitWith(a);
-    const bCircuit = circuitWith(b);
+    const aCircuit = a.circuit;
+    const bCircuit = b.circuit;
     // If they are already in the same circuit, carry on
     if (aCircuit === bCircuit) continue;
     // Otherwise merge the circuits
     circuits.delete(aCircuit);
     circuits.delete(bCircuit);
     const newCircuit = aCircuit.union(bCircuit);
+    aCircuit.forEach((j) => {
+      j.circuit = newCircuit;
+    });
+    bCircuit.forEach((j) => {
+      j.circuit = newCircuit;
+    });
     circuits.add(newCircuit);
   }
   const bigCircuits = Array.from(circuits).sort((a, b) => b.size - a.size);
@@ -48,19 +47,12 @@ function part2(): number {
   const input = readInput(2025, 8);
   const junctions = parseInput(input);
   const pairs = getPairs(junctions);
-  const circuits = new Set<Circuit>(junctions.map((j) => new Set([j])));
-  function circuitWith(j: Junction): Circuit {
-    for (const c of circuits) {
-      if (c.has(j)) return c;
-    }
-    throw new Error("Did not find circuit with junction", { cause: j });
-  }
+  const circuits = new Set<Circuit>(junctions.map((j) => j.circuit));
   // Same as part 1, but we carry on until fully connected
   for (let i = 0; i < pairs.length; i++) {
-    const { a, b } = pairs[i];
-    assert(a !== b);
-    const aCircuit = circuitWith(a);
-    const bCircuit = circuitWith(b);
+    const { a, b } = pairs.pop()!;
+    const aCircuit = a.circuit;
+    const bCircuit = b.circuit;
     if (aCircuit === bCircuit) continue;
     circuits.delete(aCircuit);
     circuits.delete(bCircuit);
@@ -69,6 +61,12 @@ function part2(): number {
       return a.x * b.x;
     }
     const newCircuit = aCircuit.union(bCircuit);
+    aCircuit.forEach((j) => {
+      j.circuit = newCircuit;
+    });
+    bCircuit.forEach((j) => {
+      j.circuit = newCircuit;
+    });
     circuits.add(newCircuit);
   }
   throw "Could not connect everything";
@@ -78,6 +76,7 @@ type Junction = {
   x: number;
   y: number;
   z: number;
+  circuit: Circuit;
 };
 
 type Circuit = Set<Junction>;
@@ -85,7 +84,9 @@ type Circuit = Set<Junction>;
 function parseInput(input: string): Junction[] {
   return input.split("\n").map((line) => {
     const [x, y, z] = line.split(",").map((str) => Number.parseInt(str));
-    return { x, y, z };
+    const junction: Junction = { x, y, z, circuit: new Set() };
+    junction.circuit.add(junction);
+    return junction;
   });
 }
 
@@ -107,8 +108,9 @@ type Pair = {
 /**
  * Get all the pairs of junctions ϴ(n log n)
  */
-function getPairs(junctions: Junction[]): Pair[] {
-  const pairs: Pair[] = [];
+function getPairs(junctions: Junction[]): Heap<Pair> {
+  // Using a min-heap to avoid sorting
+  const pairs = new Heap<Pair>((a, b) => a.dist - b.dist);
   for (let i = 0; i < junctions.length; i++) {
     for (let j = i + 1; j < junctions.length; j++) {
       const a = junctions[i];
@@ -117,5 +119,5 @@ function getPairs(junctions: Junction[]): Pair[] {
       pairs.push({ a, b, dist });
     }
   }
-  return pairs.sort((a, b) => Number(a.dist - b.dist));
+  return pairs;
 }
