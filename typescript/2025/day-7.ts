@@ -12,12 +12,12 @@ function part1(): number {
   const input = readInput(2025, 7);
   const grid = parseInput(input);
   let splits = 0;
-  for (let row = 0; row < grid.length; row++){
-    for (let col = 0; col < grid[row].length; col++){
+  for (let row = 0; row < grid.length; row++) {
+    for (let col = 0; col < grid[row].length; col++) {
       const cell = grid[row][col];
       // First propagate the beams from above
       const above = grid[row - 1]?.[col];
-      if (above && above.content !== '^' && above.hasBeam) cell.hasBeam = true;
+      if (above && above.content !== "^" && above.hasBeam) cell.hasBeam = true;
       // If this cell is a splitter, propagate left and right as well
       if (cell.content === "^" && cell.hasBeam) {
         splits += 1;
@@ -50,7 +50,7 @@ function part2(): number {
       memo.set(key, 1);
       return 1;
     }
-    if (next.content === '.') {
+    if (next.content === ".") {
       // There is a next cell, and it's empty, count the universes from there, store the answer
       const ans = countUniverses(row + 1, col);
       memo.set(key, ans);
@@ -59,12 +59,13 @@ function part2(): number {
     if (next.content === "^") {
       // There is a next cell and it's a splitter, count the universes accessible from each side
       // and store the answer
-      const ans = countUniverses(row + 1, col - 1) + countUniverses(row + 1, col + 1);
+      const ans =
+        countUniverses(row + 1, col - 1) + countUniverses(row + 1, col + 1);
       memo.set(key, ans);
       return ans;
     }
     // We hit a beam source after starting, crash
-    throw "didn't expect this content here"
+    throw "didn't expect this content here";
   }
   // Figure out where we are starting
   const startCol = grid[0].findIndex((cell) => cell.content === "S");
@@ -77,19 +78,19 @@ type Row = Cell[];
 type Cell = Empty | Source | Splitter;
 
 type Empty = {
-  content: '.',
+  content: ".";
   hasBeam: boolean;
-}
+};
 
 type Source = {
-  content: 'S',
-  hasBeam: true,
-}
+  content: "S";
+  hasBeam: true;
+};
 
 type Splitter = {
-  content: '^',
-  hasBeam: boolean,
-}
+  content: "^";
+  hasBeam: boolean;
+};
 
 const red = "\x1b[31m";
 const reset = "\x1b[0m";
@@ -103,16 +104,21 @@ function formatCell(cell: Cell): string {
     }
   }
   if (cell.hasBeam) return `${red}|${reset}`;
-  return '.'
+  return ".";
 }
 
 function printGrid(grid: Grid) {
-  console.log(grid.map(row => row.map(formatCell).join('')).join('\n'))
+  console.log(grid.map((row) => row.map(formatCell).join("")).join("\n"));
 }
 
 function parseInput(input: string): Grid {
-  return input.split('\n').map(line => line.split('').map(char => ({
-    content: char as "S" | "." | "^",
-    hasBeam: char === "S",
-  } as Cell)))
+  return input.split("\n").map((line) =>
+    line.split("").map(
+      (char) =>
+        ({
+          content: char as "S" | "." | "^",
+          hasBeam: char === "S",
+        } as Cell)
+    )
+  );
 }
