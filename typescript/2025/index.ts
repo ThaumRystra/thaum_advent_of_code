@@ -7,7 +7,7 @@ import { day6 } from "./day-6.ts";
 import { day7 } from "./day-7.ts";
 import { day8 } from "./day-8.ts";
 import { day9 } from "./day-9.ts";
-// import { day10 } from './day-10.ts';
+import { day10 } from "./day-10.ts";
 // import { day11 } from './day-11.ts';
 // import { day12 } from './day-12.ts';
 
@@ -21,7 +21,7 @@ export const year2025 = {
   "7": day7,
   "8": day8,
   "9": day9,
-  // '10': day10,
+  "10": day10,
   // '11': day11,
   // '12': day12,
 };

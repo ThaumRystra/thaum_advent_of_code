@@ -4,6 +4,8 @@
   },
   "imports": {
     "@types/lodash": "npm:@types/lodash@^4.17.13",
-    "heap-js": "npm:heap-js@^2.7.1"
+    "dtk-z3-solver-deno-v2": "npm:dtk-z3-solver-deno-v2@^0.1.4",
+    "heap-js": "npm:heap-js@^2.7.1",
+    "z3-solver": "npm:z3-solver@^4.15.4"
   }
 }

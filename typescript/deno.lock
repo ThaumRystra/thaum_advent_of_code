@@ -1,26 +1,51 @@
 {
-  "version": "4",
+  "version": "5",
   "specifiers": {
     "npm:@types/lodash@^4.17.13": "4.17.13",
+    "npm:dtk-z3-solver-deno-v2@~0.1.4": "0.1.4",
     "npm:heap-js@*": "2.7.1",
     "npm:heap-js@^2.7.1": "2.7.1",
-    "npm:lodash@*": "4.17.21"
+    "npm:lodash@*": "4.17.21",
+    "npm:z3-solver@^4.15.4": "4.15.4"
   },
   "npm": {
     "@types/lodash@4.17.13": {
       "integrity": "sha512-lfx+dftrEZcdBPczf9d0Qv0x+j/rfNCMuC6OcfXmO8gkfeNAY88PgKUbvG56whcN23gc27yenwF6oJZXGFpYxg=="
+    },
+    "async-mutex@0.3.2": {
+      "integrity": "sha512-HuTK7E7MT7jZEh1P9GtRW9+aTWiDWWi9InbZ5hjxrnRa39KS4BW04+xLBhYNS2aXhHUIKZSw3gj4Pn1pj+qGAA==",
+      "dependencies": [
+        "tslib"
+      ]
+    },
+    "dtk-z3-solver-deno-v2@0.1.4": {
+      "integrity": "sha512-k5ZefjoIDD7+BWKV2gh0RdQ3yp/SylRbaY6yyLE5/2g1eprq3tOdaP+FrYgjpu/B+M/xsYYFICU9kj0FF6gN3g==",
+      "dependencies": [
+        "async-mutex"
+      ]
     },
     "heap-js@2.7.1": {
       "integrity": "sha512-EQfezRg0NCZGNlhlDR3Evrw1FVL2G3LhU7EgPoxufQKruNBSYA8MiRPHeWbU+36o+Fhel0wMwM+sLEiBAlNLJA=="
     },
     "lodash@4.17.21": {
       "integrity": "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
+    },
+    "tslib@2.8.1": {
+      "integrity": "sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w=="
+    },
+    "z3-solver@4.15.4": {
+      "integrity": "sha512-Tcv55+k5VsPQEX7R3gIu5ieUeLp9fP1r+8+c85dQORj/v4Fy+LvOzVzZZtg4mJjUgfIhGCg6ZfAeiUiUxDPRVg==",
+      "dependencies": [
+        "async-mutex"
+      ]
     }
   },
   "workspace": {
     "dependencies": [
       "npm:@types/lodash@^4.17.13",
-      "npm:heap-js@^2.7.1"
+      "npm:dtk-z3-solver-deno-v2@~0.1.4",
+      "npm:heap-js@^2.7.1",
+      "npm:z3-solver@^4.15.4"
     ]
   }
 }
